@@ -3,3 +3,8 @@ cryptography
 scikit-learn
 pandas
 numpy
+matplotlib
+seaborn
+plotly
+
+
