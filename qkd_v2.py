@@ -30,7 +30,7 @@ else:
         # Quantum Key Distribution
         "QKD - BB84", "QKD - E91", "QKD - B92", "QKD - SARG04", "QKD - COW", "QKD - Decoy State"
     ]
-
+    #
     data = {
         "Protocol": protocols,
         "Key Exchange Time (ms)": [120, 230, 85, 30, 20, 25, 45, 33, 50, 35, 12, 14, 15, 18, 22, 20],
@@ -42,7 +42,7 @@ else:
         "Resource Usage (MB)": [15, 30, 12, 10, 40, 60, 120, 38, 200, 50, 25, 26, 27, 30, 28, 29],
         "Security Score (/10)": [5, 6, 6, 7, 9.2, 9.5, 9.3, 8.8, 9.7, 8.5, 10, 10, 10, 10, 10, 10]
     }
-
+    #
     df = pd.DataFrame(data)
 
 # Show raw data
