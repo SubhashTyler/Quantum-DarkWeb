@@ -2,90 +2,116 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
+import numpy as np
+from math import pi
 
-# Set Streamlit page config
-st.set_page_config(page_title="Quantum-Safe Cryptography Dashboard", layout="wide")
-st.title("🔐 Quantum-Safe Cryptography Benchmark Dashboard")
+# Dashboard Title
+st.set_page_config(page_title="Quantum-Safe Cryptography for the Dark Web", layout="wide")
+st.title("🕸️ Next-Generation Quantum-Safe Cryptography for the Dark Web")
+
 st.markdown("""
-This dashboard visualizes benchmark results comparing classical, post-quantum, and quantum key distribution (QKD) cryptographic protocols.
+This interactive dashboard evaluates and compares advanced cryptographic protocols including Post-Quantum Cryptography (PQC), Quantum Key Distribution (QKD), and Quantum Randomness.
+Use it to assess their suitability for secure and anonymous Dark Web communication.
 """)
 
-# Simulated Benchmark Data
-data = {
-    "Protocol": [
-        # Classical
-        "RSA 2048", "RSA 4096", "ECC", "AES-256",
+# Data Upload Option
+uploaded_file = st.file_uploader("📤 Upload your cryptographic benchmark CSV", type=["csv"])
 
-        # Post-Quantum Cryptography
-        "ML-KEM (Kyber)", "ML-DSA (Dilithium)", "SLH-DSA (SPHINCS+)",
-        "NTRU", "McEliece", "Rainbow", "Falcon",
+if uploaded_file:
+    df = pd.read_csv(uploaded_file)
+else:
+    # Simulated Dataset
+    data = {
+        "Protocol": [
+            # Classical
+            "RSA 2048", "RSA 4096", "ECC", "AES-256",
 
-        # Quantum Key Distribution
-        "QKD - BB84", "QKD - E91", "QKD - B92", "QKD - SARG04", "QKD - COW", "QKD - Decoy State"
-    ],
-    "Key Exchange Time (ms)": [120, 230, 85, 30, 20, 25, 45, 33, 50, 35, 12, 14, 15, 18, 22, 20],
-    "Encryption Time (ms)": [95, 185, 70, 12, 18, 22, 38, 20, 55, 25, 11, 13, 13, 15, 16, 15],
-    "Decryption Time (ms)": [90, 180, 68, 10, 15, 21, 40, 19, 52, 27, 10, 12, 11, 13, 14, 13],
-    "Key Size (Bytes)": [256, 512, 128, 32, 800, 1600, 4100, 1087, 1357824, 1280, 1056, 1100, 1000, 1024, 1088, 1072],
-    "Anonymity Level": [
-        "Medium", "Medium", "Medium", "Medium",
-        "High", "High", "High", "High", "High", "High", "High",
-        "Very High", "Very High", "Very High", "Very High", "Very High"
-    ],
-    "Quantum Resistance": [
-        "Low", "Low", "Low", "Low",
-        "High", "High", "Very High", "High", "Very High", "High", "Ultra High",
-        "Ultimate", "Ultimate", "Ultimate", "Ultimate", "Ultimate"
-    ],
-    "Resource Usage (MB)": [15, 30, 12, 10, 40, 60, 120, 38, 200, 50, 33, 35, 36, 38, 37, 39],
-    "Security Score (/10)": [5, 6, 6, 7, 9.2, 9.5, 9.3, 8.8, 9.7, 8.5, 9.0, 9.2, 9.1, 9.3, 9.4, 9.5]
-}
+            # Post-Quantum Cryptography (PQC)
+            "Kyber", "Dilithium", "SPHINCS+", "NTRU", "McEliece", "Rainbow", "Falcon",
 
-# Create DataFrame
-df = pd.DataFrame(data)
+            # Quantum Key Distribution (QKD)
+            "BB84", "E91", "B92", "SARG04", "COW", "Decoy State",
 
-# Sidebar filters
-st.sidebar.header("Filter Protocols")
-selected_protocols = st.sidebar.multiselect(
-    "Select cryptographic protocols to compare:",
-    options=df["Protocol"].unique(),
-    default=df["Protocol"].unique()
-)
+            # Quantum Random Number Generators (QRNG)
+            "QRNG - Entropy", "QRNG - Vacuum Noise"
+        ],
+        "Key Exchange Time (ms)": [120, 230, 85, 30, 20, 25, 45, 33, 50, 35, 12, 14, 15, 18, 22, 20, 10, 11],
+        "Encryption Time (ms)": [95, 185, 70, 12, 18, 22, 38, 20, 55, 25, 11, 13, 13, 15, 16, 15, 8, 9],
+        "Decryption Time (ms)": [90, 180, 68, 10, 15, 21, 40, 19, 52, 27, 10, 12, 11, 13, 14, 13, 7, 9],
+        "Key Size (Bytes)": [256, 512, 128, 32, 800, 1600, 4100, 1087, 1357824, 1280, 0, 0, 0, 0, 0, 0, 0, 0],
+        "Anonymity Level": ["Medium"]*4 + ["High"]*7 + ["Very High"]*6 + ["Very High"]*2,
+        "Quantum Resistance": ["Low"]*4 + ["High", "High", "Very High", "High", "Very High", "High", "Ultra High"] + ["Ultimate"]*6 + ["Ultimate"]*2,
+        "Resource Usage (MB)": [15, 30, 12, 10, 40, 60, 120, 38, 200, 50, 25, 26, 27, 30, 28, 29, 14, 15],
+        "Security Score (/10)": [5, 6, 6, 7, 9.2, 9.5, 9.3, 8.8, 9.7, 8.5, 10, 10, 10, 10, 10, 10, 10, 10]
+    }
+    df = pd.DataFrame(data)
 
-filtered_df = df[df["Protocol"].isin(selected_protocols)]
+# Show Raw Data
+st.subheader("📄 Raw Benchmark Data")
+st.dataframe(df, use_container_width=True)
 
-# Display data table
-st.subheader("📊 Protocol Benchmark Table")
+# Metric Comparison
+st.subheader("📊 Protocol Metric Comparison")
+metric = st.selectbox("Select a performance metric:", df.columns[1:-2])
+fig_bar = px.bar(df, x="Protocol", y=metric, color="Quantum Resistance", text=metric)
+fig_bar.update_layout(xaxis_tickangle=-45)
+st.plotly_chart(fig_bar, use_container_width=True)
+
+# Distribution Charts
+col1, col2 = st.columns(2)
+with col1:
+    st.subheader("🔒 Anonymity Level Distribution")
+    fig_anon = px.pie(df, names="Anonymity Level", title="Anonymity Levels")
+    st.plotly_chart(fig_anon)
+
+with col2:
+    st.subheader("🧬 Quantum Resistance Levels")
+    fig_qres = px.pie(df, names="Quantum Resistance", title="Quantum Resistance")
+    st.plotly_chart(fig_qres)
+
+# Heatmap
+st.subheader("🌡️ Heatmap: Protocol Performance")
+perf_cols = ["Key Exchange Time (ms)", "Encryption Time (ms)", "Decryption Time (ms)", "Resource Usage (MB)", "Security Score (/10)"]
+fig_heat, ax = plt.subplots(figsize=(12, 7))
+sns.heatmap(df[perf_cols].set_index(df['Protocol']), annot=True, cmap="YlGnBu", fmt=".1f")
+st.pyplot(fig_heat)
+
+# Radar Chart
+st.subheader("📡 Radar Chart: Comparative Protocol Profile")
+def radar_chart(df, metrics):
+    categories = metrics
+    N = len(categories)
+    fig, ax = plt.subplots(figsize=(7, 7), subplot_kw=dict(polar=True))
+    for i, row in df.iterrows():
+        values = [row[m] for m in categories]
+        values += values[:1]
+        angles = [n / float(N) * 2 * pi for n in range(N)]
+        angles += angles[:1]
+        ax.plot(angles, values, label=row['Protocol'])
+        ax.fill(angles, values, alpha=0.1)
+    ax.set_xticks([n / float(N) * 2 * pi for n in range(N)])
+    ax.set_xticklabels(categories)
+    ax.set_title("Protocol Radar View")
+    plt.legend(loc='upper right', bbox_to_anchor=(1.4, 1))
+    return fig
+
+radar_metrics = ["Key Exchange Time (ms)", "Encryption Time (ms)", "Decryption Time (ms)", "Security Score (/10)"]
+st.pyplot(radar_chart(df, radar_metrics))
+
+# Filtering
+st.subheader("🧮 Advanced Filtering Options")
+col1, col2 = st.columns(2)
+with col1:
+    min_score = st.slider("Minimum Security Score", 0.0, 10.0, 7.0, 0.1)
+with col2:
+    max_resource = st.slider("Maximum Resource Usage (MB)", 5, 250, 100)
+
+filtered_df = df[(df["Security Score (/10)"] >= min_score) & (df["Resource Usage (MB)"] <= max_resource)]
+st.markdown(f"Protocols matching filter: **{len(filtered_df)}**")
 st.dataframe(filtered_df, use_container_width=True)
 
-# Visualizations
-st.subheader("📈 Benchmark Comparisons")
-
-metric = st.selectbox("Select metric to visualize:", [
-    "Key Exchange Time (ms)",
-    "Encryption Time (ms)",
-    "Decryption Time (ms)",
-    "Key Size (Bytes)",
-    "Resource Usage (MB)",
-    "Security Score (/10)"
-])
-
-fig, ax = plt.subplots(figsize=(12, 6))
-sns.barplot(data=filtered_df, x="Protocol", y=metric, palette="viridis", ax=ax)
-plt.xticks(rotation=45, ha='right')
-plt.ylabel(metric)
-plt.title(f"Comparison of {metric}")
-st.pyplot(fig)
-
-# Legend for qualitative metrics
-st.subheader("🔎 Anonymity & Quantum Resistance")
-st.markdown("""
-- **Anonymity Levels:** Medium < High < Very High
-- **Quantum Resistance:** Low < High < Very High < Ultra High < Ultimate
-""")
-
 # Footer
-st.markdown("""
----
-Developed for: *Next-Generation Quantum-Safe Cryptography for the Dark Web*
-""")
+st.markdown("---")
+st.markdown("**Research Project**: *Next-Generation Quantum-Safe Cryptography for the Dark Web: Leveraging PQC, QKD, and Quantum Randomness*  ")
+st.markdown("Developed by: Research Team | Secure Cryptographic Systems | 2025")
