@@ -19,7 +19,7 @@ if uploaded_file:
     df = pd.read_csv(uploaded_file)
 else:
     # Extended and more realistic simulated benchmark data
-    data = {
+        data = {
         "Protocol": [
             # Classical
             "RSA 2048", "RSA 4096", "ECC", "AES-256",
@@ -29,16 +29,16 @@ else:
             "NTRU", "McEliece", "Rainbow", "Falcon",
 
             # Quantum Key Distribution
-            "QKD - BB84", "QKD - E91", "QKD - B92", "QKD - SARG04", "QKD - COW", "QKD - Decoy State"
+            "QKD - BB84", "QKD - E91", "QKD - B92", "QKD - SARG04", "QKD - COW", "QKD - Decoy State", "QKD - Twin-Field"
         ],
-        "Key Exchange Time (ms)": [120, 230, 85, 30, 20, 25, 45, 33, 50, 35, 12, 14, 15, 18, 22, 20],
-        "Encryption Time (ms)":      [95, 185, 70, 12, 18, 22, 38, 20, 55, 25, 11, 13, 13, 15, 16, 15],
-        "Decryption Time (ms)":      [90, 180, 68, 10, 15, 21, 40, 19, 52, 27, 10, 12, 11, 13, 14, 13],
-        "Key Size (Bytes)":         [256, 512, 128, 32, 800, 1600, 4100, 1087, 1357824, 1280, 0, 0, 0, 0, 0, 0],
-        "Anonymity Level":          ["Medium"]*4 + ["High"]*7 + ["Very High"]*5,
-        "Quantum Resistance":       ["Low"]*4 + ["High", "High", "Very High", "High", "Very High", "High", "Ultra High"] + ["Ultimate"]*5,
-        "Resource Usage (MB)":      [15, 30, 12, 10, 40, 60, 120, 38, 200, 50, 25, 26, 27, 30, 28, 29],
-        "Security Score (/10)":     [5, 6, 6, 7, 9.2, 9.5, 9.3, 8.8, 9.7, 8.5, 10, 10, 10, 10, 10, 10]
+        "Key Exchange Time (ms)": [120, 230, 85, 30, 20, 25, 45, 33, 50, 35, 12, 14, 15, 18, 22, 20, 19],
+        "Encryption Time (ms)":   [95, 185, 70, 12, 18, 22, 38, 20, 55, 25, 11, 13, 13, 15, 16, 15, 14],
+        "Decryption Time (ms)":   [90, 180, 68, 10, 15, 21, 40, 19, 52, 27, 10, 12, 11, 13, 14, 13, 12],
+        "Key Size (Bytes)":       [256, 512, 128, 32, 800, 1600, 4100, 1087, 1357824, 1280, 0, 0, 0, 0, 0, 0, 0],
+        "Anonymity Level":        ["Medium"]*4 + ["High"]*7 + ["Very High"]*6,
+        "Quantum Resistance":     ["Low"]*4 + ["High", "High", "Very High", "High", "Very High", "High", "Ultra High"] + ["Ultimate"]*6,
+        "Resource Usage (MB)":    [15, 30, 12, 10, 40, 60, 120, 38, 200, 50, 25, 26, 27, 30, 28, 29, 26],
+        "Security Score (/10)":   [5, 6, 6, 7, 9.2, 9.5, 9.3, 8.8, 9.7, 8.5, 10, 10, 10, 10, 10, 10, 9.8]
     }
     df = pd.DataFrame(data)
 
