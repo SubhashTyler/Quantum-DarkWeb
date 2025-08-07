@@ -22,30 +22,43 @@ if uploaded_file:
     df = pd.read_csv(uploaded_file)
 else:
     # Simulated Dataset
-    data = {
-        "Protocol": [
-            # Classical
-            "RSA 2048", "RSA 4096", "ECC", "AES-256",
+    protocols = [
+        # Classical
+        "RSA 2048", "RSA 4096", "ECC", "AES-256",
 
-            # Post-Quantum Cryptography (PQC)
-            "Kyber", "Dilithium", "SPHINCS+", "NTRU", "McEliece", "Rainbow", "Falcon",
+        # Post-Quantum Cryptography (PQC)
+        "Kyber", "Dilithium", "SPHINCS+", "NTRU", "McEliece", "Rainbow", "Falcon",
 
-            # Quantum Key Distribution (QKD)
-            "BB84", "E91", "B92", "SARG04", "COW", "Decoy State",
+        # Quantum Key Distribution (QKD)
+        "BB84", "E91", "B92", "SARG04", "COW", "Decoy State",
 
-            # Quantum Random Number Generators (QRNG)
-            "QRNG - Entropy", "QRNG - Vacuum Noise"
-        ],
-        "Key Exchange Time (ms)": [120, 230, 85, 30, 20, 25, 45, 33, 50, 35, 12, 14, 15, 18, 22, 20, 10, 11],
-        "Encryption Time (ms)": [95, 185, 70, 12, 18, 22, 38, 20, 55, 25, 11, 13, 13, 15, 16, 15, 8, 9],
-        "Decryption Time (ms)": [90, 180, 68, 10, 15, 21, 40, 19, 52, 27, 10, 12, 11, 13, 14, 13, 7, 9],
-        "Key Size (Bytes)": [256, 512, 128, 32, 800, 1600, 4100, 1087, 1357824, 1280, 0, 0, 0, 0, 0, 0, 0, 0],
-        "Anonymity Level": ["Medium"]*4 + ["High"]*7 + ["Very High"]*6 + ["Very High"]*2,
-        "Quantum Resistance": ["Low"]*4 + ["High", "High", "Very High", "High", "Very High", "High", "Ultra High"] + ["Ultimate"]*6 + ["Ultimate"]*2,
-        "Resource Usage (MB)": [15, 30, 12, 10, 40, 60, 120, 38, 200, 50, 25, 26, 27, 30, 28, 29, 14, 15],
-        "Security Score (/10)": [5, 6, 6, 7, 9.2, 9.5, 9.3, 8.8, 9.7, 8.5, 10, 10, 10, 10, 10, 10, 10, 10]
-    }
-    df = pd.DataFrame(data)
+        # Quantum Random Number Generators (QRNG)
+        "QRNG - Entropy", "QRNG - Vacuum Noise"
+    ]
+
+    key_exchange = [120, 230, 85, 30, 20, 25, 45, 33, 50, 35, 12, 14, 15, 18, 22, 20, 10, 11]
+    encryption =   [95, 185, 70, 12, 18, 22, 38, 20, 55, 25, 11, 13, 13, 15, 16, 15, 8, 9]
+    decryption =   [90, 180, 68, 10, 15, 21, 40, 19, 52, 27, 10, 12, 11, 13, 14, 13, 7, 9]
+    key_size =     [256, 512, 128, 32, 800, 1600, 4100, 1087, 1357824, 1280, 0, 0, 0, 0, 0, 0, 0, 0]
+    anonymity =    ["Medium"]*4 + ["High"]*7 + ["Very High"]*6 + ["Very High"]*2
+    resistance =   ["Low"]*4 + ["High", "High", "Very High", "High", "Very High", "High", "Ultra High"] + ["Ultimate"]*6 + ["Ultimate"]*2
+    usage =        [15, 30, 12, 10, 40, 60, 120, 38, 200, 50, 25, 26, 27, 30, 28, 29, 14, 15]
+    score =        [5, 6, 6, 7, 9.2, 9.5, 9.3, 8.8, 9.7, 8.5, 10, 10, 10, 10, 10, 10, 10, 10]
+
+    if not all(len(lst) == len(protocols) for lst in [key_exchange, encryption, decryption, key_size, anonymity, resistance, usage, score]):
+        st.error("Simulated data arrays are not of equal length. Please check data consistency.")
+    else:
+        df = pd.DataFrame({
+            "Protocol": protocols,
+            "Key Exchange Time (ms)": key_exchange,
+            "Encryption Time (ms)": encryption,
+            "Decryption Time (ms)": decryption,
+            "Key Size (Bytes)": key_size,
+            "Anonymity Level": anonymity,
+            "Quantum Resistance": resistance,
+            "Resource Usage (MB)": usage,
+            "Security Score (/10)": score
+        })
 
 # Show Raw Data
 st.subheader("📄 Raw Benchmark Data")
