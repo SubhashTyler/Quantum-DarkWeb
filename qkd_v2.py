@@ -19,7 +19,7 @@ if uploaded_file:
     df = pd.read_csv(uploaded_file)
 else:
     # Extended and more realistic simulated benchmark data
-        data = {
+    data = {
         "Protocol": [
             # Classical
             "RSA 2048", "RSA 4096", "ECC", "AES-256",
@@ -40,6 +40,7 @@ else:
         "Resource Usage (MB)":    [15, 30, 12, 10, 40, 60, 120, 38, 200, 50, 25, 26, 27, 30, 28, 29, 26],
         "Security Score (/10)":   [5, 6, 6, 7, 9.2, 9.5, 9.3, 8.8, 9.7, 8.5, 10, 10, 10, 10, 10, 10, 9.8]
     }
+
     df = pd.DataFrame(data)
 
 st.subheader("🔍 Raw Benchmark Data")
